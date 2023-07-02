@@ -3,16 +3,16 @@ include(pico_sdk_import.cmake)
 
 set(PICO_BOARD pico_w)
     
-project(my_project)
+project(PicoFirmware)
 
 # initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-add_executable(my_project
-        hello_world.c
+add_executable(PicoFirmware
+        Firmware.c
         )
 
-target_link_libraries(my_project
+target_link_libraries(PicoFirmware
         pico_stdlib              # for core functionality
         pico_cyw43_arch_none     # we need Wifi to access the GPIO, but we don't need anything else
         hardware_adc
@@ -20,4 +20,4 @@ target_link_libraries(my_project
         )
 
 # create map/bin/hex file etc.
-pico_add_extra_outputs(my_project)
+pico_add_extra_outputs(my_PicoFirmware)
