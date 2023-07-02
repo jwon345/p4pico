@@ -4,7 +4,18 @@
 #include "hardware/gpio.h"
 #include "hardware/adc.h"
 
-const float sleepTime = 500;
+float risingTime = 100;
+float sleepTime = 1000;
+float DutyCycle = 0.01f;
+
+void pulseClock()
+{
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+    gpio_put(2,1);
+    sleep_ms(risingTime);
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
+    gpio_put(2,0);
+}
 
 
 int main() {
@@ -38,16 +49,19 @@ int main() {
     while (true) {
 
         gpio_put(3,1);
-        for (int a = 0; a < 3; a++)
-        {
-            cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
-            gpio_put(2,1);
-            sleep_ms(sleepTime);
-            cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
-            gpio_put(2,0);
-            sleep_ms(sleepTime);
-            gpio_put(3,0);
-        }
+        pulseClock();
+        gpio_put(3,0);
+        sleep_ms(sleepTime*DutyCycle);
+        pulseClock();
+        sleep_ms(sleepTime - (sleepTime*DutyCycle));
+        // for (int a = 0; a < 3; a++)
+        // {
+        //     pulseClock();
+        //     gpio_put(3,0);
+        //     sleep_ms(sleepTime*DutyCycle);
+        //     pulseClock();
+        //     sleep_ms(sleepTime - (sleepTime*DutyCycle));
+        // }
 
 
 
