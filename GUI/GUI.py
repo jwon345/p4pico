@@ -1,10 +1,14 @@
-import serial
+import serial 
 import pygame
 import time
 
 #For serial reading
 
-ser = serial.Serial('COM3', 9600)
+#for windows machine
+#ser = Serial('COM3', 9600)
+
+#Linux Machines
+ser = serial.Serial('/dev/ttyACM0',9600) 
 
 #Pygame for GUI
 
@@ -52,6 +56,7 @@ while run:
 
     #Reading the COM3 line. This is blocking?
 
+
     reading = ser.readline().decode()
 
     #Debug print
@@ -64,7 +69,7 @@ while run:
 
             # print(str(i) + " is true")
 
-            pygame.draw.line(screen,"red",led,sensors[i])
+            pygame.draw.line(screen,"red",led,sensors[i], 2)
 
             sensorStates[i] = True
 
