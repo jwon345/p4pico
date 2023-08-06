@@ -12,7 +12,7 @@ screenHeight = 800
 
 connected = False
 
-
+ser = serial.Serial() # i guess init definition to remove the unbound issues
 # establishing connection based on operating system
 try:   
     if platform == "linux" or "linux2":
