@@ -12,8 +12,8 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "debugOptions": [
-            "RedirectOutput",
-            "Sudo"
+            "RedirectOutput", //what the fuck does this do?
+            //"Sudo" // to access the com port of linux. sudo permissions needed
             ]
         }
     ]
