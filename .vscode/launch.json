@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "externalTerminal",
-            "justMyCode": true,
+            // "justMyCode": true,
             // "debugOptions": [
             // "RedirectOutput", //what the fuck does this do?
             // //"Sudo" // to access the com port of linux. sudo permissions needed

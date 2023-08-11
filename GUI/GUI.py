@@ -2,14 +2,18 @@ import serial
 import pygame
 from sys import platform
 import time
-import PositionIndex
+from PositionIndex import calculatePositioning
 
+###User definition
 numberSensors = 16
 numberLEDs = 32
 
 screenWidth = 800
 screenHeight = 800
+radius = 100
 
+
+##
 connected = False
 
 ser = serial.Serial() # i guess init definition to remove the unbound issues
@@ -42,7 +46,7 @@ led = [200,250]
 #States of the LED to be varriable
 sensorStates = [True,False,False,False]
 
-LEDS = PositionIndex.calculatePositioning(numberLEDs,200,250,250)
+LEDS = calculatePositioning(numberLEDs,radius,screenHeight/2,screenWidth/2)
 
 while run:
     #Exit handler
