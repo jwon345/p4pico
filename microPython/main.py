@@ -1,37 +1,47 @@
 from machine import Pin
 import time
-
   
 
 led = Pin("LED", Pin.OUT)
-clk = Pin(2, Pin.OUT)
-data = Pin(3, Pin.OUT)
-pin1 = Pin(1,Pin.OUT)
+clk = Pin(1, Pin.OUT)
+data = Pin(2, Pin.OUT)
 
-  
 
-gData1 = Pin(16, Pin.IN)
-gData2 = Pin(17, Pin.IN)
-gData3 = Pin(18, Pin.IN)
-gData4 = Pin(19, Pin.IN)
+Sensor = []
+
+for Index in range(2,17):
+    Sensor.append(Pin(Index,Pin.IN))
+
+
 
 #delays to potentially allow for rising time
-
 #in milliseconds
-
 RiseTimers = 1
 TimeOn = 10
 TimeOff = 20
 
-pin1.high()
+def Iterate():
+    #push In 0
+    time.sleep_ms(TimeOn) #ON time
+
+    clk.high()
+    time.sleep_ms(RiseTimers)
+    clk.low()
+
+
+    #hold the 0
+
+    time.sleep_ms(TimeOff)
 
 while True:
     #push FirstClock
     data.high()
     led.high()
 
+    #rise timer for rising edge clock 
     time.sleep_ms(RiseTimers) #
 
+    #Rising edge clock
     clk.high()
 
     time.sleep_ms(RiseTimers)
@@ -42,15 +52,14 @@ while True:
 
     #printing to serial
 
-    print(str(gData1.value()) + str(gData2.value()) + str(gData3.value()) + str(gData4.value()))
+    # print(str(gData1.value()) + str(gData2.value()) + str(gData3.value()) + str(gData4.value()))
 
-    #push In 0
-    time.sleep_ms(TimeOn)
-    clk.high()
-    time.sleep_ms(RiseTimers)
-    clk.low()
-    data.low()
+    Svalue = 0
 
-    #hold the 0
-
-    time.sleep_ms(TimeOff)
+    for i in range(1,32):
+        print(i) # LED index
+        for S in range(len(Sensor), 0): 
+            Svalue += Sensor[S].Value() #adds if it's on
+            Svalue <<= 1 #Shifts left
+        print(Svalue)
+        Iterate()

@@ -3,16 +3,15 @@ import time
 from sys import platform
 
 ser = serial.Serial()
-## Force Testt
-# ser = serial.Serial('/dev/pts/4',115200) 
-ser = serial.Serial('/dev/ttyUSB0',115200) 
+## Esp32?
+# ser = serial.Serial('/dev/ttyUSB0',115200) 
 
 ## Con for specific OS
 try:   
     if platform == "linux" or "linux2":
         # ser = serial.Serial('/dev/ttyUSB0',115200) 
         # ser = serial.Serial('/dev/ttyUSB1',115200) 
-        ser = serial.Serial('/dev/ttyACM0',115200) 
+        ser = serial.Serial('/dev/ttyACM1',115200) 
         print("connected")
         
     elif platform == "win32": 
@@ -28,12 +27,12 @@ time.sleep(1)
 
 while True:
     try:
-        time.sleep_ms(500)
-        print(ser.readline().decode())
+        print(ser.readline())
+        # print(ser.readline().decode())
     except:
         try:
+            time.sleep(1)
             print("dead")
-            ser = serial.Serial('/dev/ttyUSB0',115200) 
             ser = serial.Serial('/dev/ttyACM0', 115200) 
             print("connected")
         except:

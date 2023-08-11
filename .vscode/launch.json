@@ -9,12 +9,12 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal",
+            "console": "externalTerminal",
             "justMyCode": true,
-            "debugOptions": [
-            "RedirectOutput", //what the fuck does this do?
-            //"Sudo" // to access the com port of linux. sudo permissions needed
-            ]
+            // "debugOptions": [
+            // "RedirectOutput", //what the fuck does this do?
+            // //"Sudo" // to access the com port of linux. sudo permissions needed
+            // ]
         }
     ]
 }
