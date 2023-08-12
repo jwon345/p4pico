@@ -1,4 +1,5 @@
 import serial 
+import math
 import pygame
 from sys import platform
 import time
@@ -8,10 +9,17 @@ from PositionIndex import calculatePositioning
 numberSensors = 16
 numberLEDs = 32
 
+SensorOffset = 1/numberLEDs * 2 * math.pi * 0.5
+
 screenWidth = 800
 screenHeight = 800
-radius = 100
+radius = 300 
 
+LEDsize = 5
+LEDColor = "black"
+
+sensorSize = 5
+sensorColor = "red"
 
 ##
 connected = False
@@ -48,6 +56,8 @@ sensorStates = [True,False,False,False]
 
 LEDS = calculatePositioning(numberLEDs,radius,screenHeight/2,screenWidth/2)
 
+Sensors = calculatePositioning(numberSensors,radius,screenHeight/2,screenWidth/2, offset=SensorOffset)
+
 while run:
     #Exit handler
     for event in pygame.event.get():
@@ -60,7 +70,12 @@ while run:
 
   
     for LED in LEDS:
-        pygame.draw.circle(screen, "black", (LED[1],LED[2]),10)
+        if LED[0] == 0:
+            pygame.draw.circle(screen, "green", (LED[1],LED[2]),LEDsize)
+            continue
+        pygame.draw.circle(screen, LEDColor, (LED[1],LED[2]),LEDsize)
+    for sensor in Sensors:
+        pygame.draw.circle(screen, sensorColor, (sensor[1],sensor[2]),sensorSize)
 
     pygame.draw.circle(screen, "black", led,10)
 
