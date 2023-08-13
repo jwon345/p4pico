@@ -28,9 +28,9 @@ ser = serial.Serial() # i guess init definition to remove the unbound issues
 # establishing connection based on operating system
 try:   
     if platform == "linux" or "linux2":
-        ser = serial.Serial('/dev/ttyACM0',9600) 
+        ser = serial.Serial('/dev/ttyACM0',115200) 
     elif platform == "win32": 
-        ser = serial.Serial('COM3',9600) 
+        ser = serial.Serial('COM3',115200) 
     else:
         print("tf operating system?")
     connected = True
@@ -77,17 +77,11 @@ while run:
     for sensor in Sensors:
         pygame.draw.circle(screen, sensorColor, (sensor[1],sensor[2]),sensorSize)
 
-    pygame.draw.circle(screen, "black", led,10)
-
-  
-
-    pygame.draw.circle(screen, "red" if sensorStates[0] else "blue", sensors[0],10)
-
-    pygame.draw.circle(screen, "red" if sensorStates[1] else "blue", sensors[1],10)
-
-    pygame.draw.circle(screen, "red" if sensorStates[2] else "blue", sensors[2],10)
-
-    pygame.draw.circle(screen, "red" if sensorStates[3] else "blue", sensors[3],10)
+    # pygame.draw.circle(screen, "black", led,10)
+    # pygame.draw.circle(screen, "red" if sensorStates[0] else "blue", sensors[0],10)
+    # pygame.draw.circle(screen, "red" if sensorStates[1] else "blue", sensors[1],10)
+    # pygame.draw.circle(screen, "red" if sensorStates[2] else "blue", sensors[2],10)
+    # pygame.draw.circle(screen, "red" if sensorStates[3] else "blue", sensors[3],10)
 
   
 

@@ -2,13 +2,12 @@ from machine import Pin
 import time
   
 
-led = Pin("LED", Pin.OUT)
+led = Pin(25, Pin.OUT)
 clk = Pin(1, Pin.OUT)
 data = Pin(2, Pin.OUT)
 
 
 Sensor = []
-
 for Index in range(2,17):
     Sensor.append(Pin(Index,Pin.IN))
 
@@ -17,8 +16,10 @@ for Index in range(2,17):
 #delays to potentially allow for rising time
 #in milliseconds
 RiseTimers = 1
-TimeOn = 10
-TimeOff = 20
+TimeOn = 5
+TimeOff = 5
+delay_ms = 1
+delay_ms_cycle = 1
 
 def Iterate():
     #push In 0
@@ -56,10 +57,29 @@ while True:
 
     Svalue = 0
 
-    for i in range(1,32):
-        print(i) # LED index
-        for S in range(len(Sensor), 0): 
-            Svalue += Sensor[S].Value() #adds if it's on
-            Svalue <<= 1 #Shifts left
-        print(Svalue)
+    ledIndex = 0
+    for LED in range(0,32):
+        sensA = 0
+        sensB = 0
+        sensC = 0
+        for C in range(5,-1,-1): # sensors 0,1,2,3,4,5
+            sensC <<= 1
+            sensC += Sensor[C].Value()
+            led.toggle()
+            time.sleep_ms(delay_ms)
+        for B in range(11,5,-1): # sensors 6,7,8,9,10,11
+            sensB <<= 1
+            sensB += 1
+            sensB += Sensor[B].Value()
+            led.toggle()
+            time.sleep_ms(delay_ms)
+        for A in range(15,11,-1): #sensors 12,13,14,15
+            sensA <<= 1
+            sensA += 1
+            sensA += Sensor[A].Value()
+            led.toggle()
+            time.sleep_ms(delay_ms)
+        #iterate
+        print(chr(LED + 64)+chr(sensA+64)+chr(sensB+64)+chr(sensC+64))
+        time.sleep_ms(delay_ms_cycle)
         Iterate()

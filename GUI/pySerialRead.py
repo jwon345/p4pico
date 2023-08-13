@@ -11,7 +11,7 @@ try:
     if platform == "linux" or "linux2":
         # ser = serial.Serial('/dev/ttyUSB0',115200) 
         # ser = serial.Serial('/dev/ttyUSB1',115200) 
-        ser = serial.Serial('/dev/ttyACM1',115200) 
+        ser = serial.Serial('/dev/ttyACM0',9600) 
         print("connected")
         
     elif platform == "win32": 
@@ -27,7 +27,13 @@ time.sleep(1)
 
 while True:
     try:
-        print(ser.readline())
+        x = ser.readline()
+        print(x)
+        print(x[0:len(x)-2])
+        x = (x[0:len(x)-2])
+        binary_representation = ' '.join(format(byte, '08b') for byte in x)
+        print(binary_representation)
+        print("\n")
         # print(ser.readline().decode())
     except:
         try:
