@@ -8,7 +8,7 @@ data = Pin(2, Pin.OUT)
 
 
 Sensor = []
-for Index in range(2,17):
+for Index in range(2,18):
     Sensor.append(Pin(Index,Pin.IN))
 
 
@@ -18,8 +18,8 @@ for Index in range(2,17):
 RiseTimers = 1
 TimeOn = 5
 TimeOff = 5
-delay_ms = 1
-delay_ms_cycle = 1
+delay_ms = 100
+delay_ms_cycle = 100
 
 def Iterate():
     #push In 0
@@ -64,19 +64,17 @@ while True:
         sensC = 0
         for C in range(5,-1,-1): # sensors 0,1,2,3,4,5
             sensC <<= 1
-            sensC += Sensor[C].Value()
+            sensC += Sensor[C].value()
             led.toggle()
             time.sleep_ms(delay_ms)
         for B in range(11,5,-1): # sensors 6,7,8,9,10,11
             sensB <<= 1
-            sensB += 1
-            sensB += Sensor[B].Value()
+            sensB += Sensor[B].value()
             led.toggle()
             time.sleep_ms(delay_ms)
         for A in range(15,11,-1): #sensors 12,13,14,15
             sensA <<= 1
-            sensA += 1
-            sensA += Sensor[A].Value()
+            sensA += Sensor[A].value()
             led.toggle()
             time.sleep_ms(delay_ms)
         #iterate
