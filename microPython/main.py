@@ -3,8 +3,8 @@ import time
   
 
 led = Pin(25, Pin.OUT)
-clk = Pin(1, Pin.OUT)
-data = Pin(2, Pin.OUT)
+clk = Pin(0, Pin.OUT)
+data = Pin(1, Pin.OUT)
 
 
 Sensor = []
@@ -16,16 +16,19 @@ for Index in range(2,18):
 #delays to potentially allow for rising time
 #in milliseconds
 RiseTimers = 1
-TimeOn = 5
+TimeOn = 115
 TimeOff = 5
-delay_ms = 100
-delay_ms_cycle = 100
+
+
+delay_ms = 5
+delay_ms_cycle = 10
 
 def Iterate():
     #push In 0
-    time.sleep_ms(TimeOn) #ON time
+
 
     clk.high()
+    time.sleep_ms(TimeOn) #ON time
     time.sleep_ms(RiseTimers)
     clk.low()
 
@@ -81,3 +84,4 @@ while True:
         print(chr(LED + 64)+chr(sensA+64)+chr(sensB+64)+chr(sensC+64))
         time.sleep_ms(delay_ms_cycle)
         Iterate()
+
