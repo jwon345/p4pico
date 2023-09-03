@@ -41,6 +41,15 @@ def calculatePositioning(number, Radius, screenMidX, screenMidY, offset = 0.0):
         ])
     return positionArray 
 
-# testing
+LEDArrayIndex = [
+    3,2,1,0,
+    7,6,5,4,
+    11,10,9,8,
+    15,14,13,12,
+    19,18,17,16,
+    23,22,21,20,
+    27,26,25,24,
+    31,30,29,28]
+
 # print(calculatePositioning(4,50,50,50))
 # input() # stop close

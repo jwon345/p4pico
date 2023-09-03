@@ -3,13 +3,16 @@ import time
   
 
 led = Pin(25, Pin.OUT)
+
+#changed with jumper wires
 clk = Pin(0, Pin.OUT)
 data = Pin(1, Pin.OUT)
 
 
 Sensor = []
-for Index in range(2,18):
-    Sensor.append(Pin(Index,Pin.IN))
+for Index in range(2,6):
+    for multiplier in range(0,4):
+        Sensor.append(Pin((Index + multiplier*4),Pin.IN))
 
 
 
@@ -80,7 +83,8 @@ while True:
             sensA += Sensor[A].value()
             led.toggle()
             time.sleep_ms(delay_ms)
-        #iterate
+
+        #iterate +64 to avoid null chars
         print(chr(LED + 64)+chr(sensA+64)+chr(sensB+64)+chr(sensC+64))
         time.sleep_ms(delay_ms_cycle)
         Iterate()
