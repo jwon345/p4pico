@@ -1,27 +1,37 @@
-import time
+import pygame
+import shapely
+from shapely.geometry import mapping
 
-# print(0b111111)
+pygame.init()
+screen = pygame.display.set_mode((800,800))
 
-# a = 0b1
+running = True
+a= shapely.Polygon([(500,1),(100,100),(100,200),(200,200),(200,100),(500,1,)])
+b= shapely.Polygon([(1,1),(20,100),(11,20),(200,200),(200,100),(1,1,)])
 
-# print(a)
-# print(int("1111", 2))
+# print(shapely.intersection(a,b,1.0))
+x = (shapely.intersection(a,b,1.0))
+print(x)
+print(mapping(x)["coordinates"])
 
-thisval = 3
+array = []
 
-thisval += 1
-thisval <<= 1
-print(thisval)
-print(bin(thisval))
+y = (mapping(x)["coordinates"])
+for i in range(0,len(y[0])):
+    array.append(y[0][i])
+print(array)
 
-print(range(0,10))
+while running:
+    for event in pygame.event.get():
 
-for i in range(10,0,-1):
-    print(i)
+        if event.type == pygame.QUIT:
+            running = False
 
-# print(0b11111000111111111111)
-# x = 0b11111000111111111111
-# print(x)
-# print(bin(x))
+    screen.fill("white")
+    pygame.draw.polygon(screen,"black",[(500,1),(100,100),(100,200),(200,200),(200,100),(500,1,)])
+    pygame.draw.polygon(screen,"green",[(1,1),(20,100),(11,20),(200,200),(200,100),(1,1,)])
+    pygame.draw.polygon(screen,"purple",array)
 
-time.sleep(10)
+    pygame.display.flip()
+
+pygame.quit()
