@@ -10,9 +10,10 @@ data = Pin(1, Pin.OUT)
 
 
 Sensor = []
-for Index in range(2,6):
+for Index in range(2,5):
     for multiplier in range(0,4):
-        Sensor.append(Pin((Index + multiplier*4),Pin.IN))
+        Sensor.append(Pin((Index + (multiplier)*5),Pin.IN))
+
 
 
 

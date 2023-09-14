@@ -13,7 +13,7 @@ from testData import microRead
 numberSensors = 16
 numberLEDs = 32
 
-angleOffset = 0.2
+angleOffset = -0.2
 SensorOffset = 1/numberLEDs * 2 * math.pi * angleOffset
 
 screenWidth = 800
@@ -104,7 +104,11 @@ while run:
     binB = bin(ord(microChars[2]))
     binC = bin(ord(microChars[3]))
 
-    Data = [binLED[4:10],binA[3:10]+binB[3:10]+binC[5:10]]
+    print(binA)
+    print(binB)
+    print(binC)
+
+    Data = [binLED[4:10],binA[5:10]+binB[3:10]+binC[3:10]]
 
     print(Data)
 
