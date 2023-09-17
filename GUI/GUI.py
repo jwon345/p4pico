@@ -52,6 +52,13 @@ except:
     print("couldn't connect for some reason")
 
 
+def draw_polygon_alpha(surface, color, points):
+    lx, ly = zip(*points)
+    min_x, min_y, max_x, max_y = min(lx), min(ly), max(lx), max(ly)
+    target_rect = pygame.Rect(min_x, min_y, max_x - min_x, max_y - min_y)
+    shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
+    pygame.draw.polygon(shape_surf, color, [(x - min_x, y - min_y) for x, y in points])
+    surface.blit(shape_surf, target_rect)
 
 
 
@@ -155,18 +162,49 @@ while run:
 
     # pp.pprint(PolygonVerticies)
 
-    silhouetteArrayBuffer[int(Data[0],2)] = (PolygonVerticies)
-    # pp.pprint(silhouetteArrayBuffer)
+    # This one might need to un comment later if 
+    # silhouetteArrayBuffer[int(Data[0],2)] = (PolygonVerticies)
 
+
+    #Only append when there is a silhouette generated -> all points not equal  --> kinda works
+    inequalityFlag = False
+    for verticies in PolygonVerticies:
+        if verticies == PolygonVerticies[0]:
+            continue
+        else:
+            inequalityFlag = True
+
+    #make some polygon point sanitising method
+
+    for i in range(1,len(PolygonVerticies)-2,1):
+        try:
+            if PolygonVerticies[i] != PolygonVerticies[i+1]:
+                if PolygonVerticies[i-1] == PolygonVerticies[i+1]:
+                    PolygonVerticies.pop(i)
+                    print("Removed Isolated Point")
+        except:
+            print(":)")
+            
+
+    if inequalityFlag:
+        print("Inequality ")
+        silhouetteArrayBuffer.append(PolygonVerticies)        
+
+    #rolling buffer of silhouettes  FILO
+    if len(silhouetteArrayBuffer) > 32:
+        silhouetteArrayBuffer.pop(0)
+    # pp.pprint(silhouetteArrayBuffer)
 
         # intersectingPolygon = (shapely.intersection(a,b,1))
     try:
-        pygame.draw.polygon(screen,"green", silhouetteArrayBuffer[1])
-        pygame.draw.polygon(screen,"black", silhouetteArrayBuffer[16])
+        for s in silhouetteArrayBuffer:
+            draw_polygon_alpha(screen,(255,0,0,5), s)
+        # pygame.draw.polygon(screen,"green", silhouetteArrayBuffer[1])
+        # pygame.draw.polygon(screen,"black", silhouetteArrayBuffer[16])
     except:
         pass
 
-
+    # THe issue here is the Polygons are not shaped not like a cone. 
     try:
         a = shapely.Polygon(silhouetteArrayBuffer[4])
         b = shapely.Polygon(silhouetteArrayBuffer[16])
