@@ -129,10 +129,10 @@ while run:
 
     LedPos = int((int(Data[0],2))/2)
 
-    ReArrangedData = Data[1][LedPos:16] + Data[1][0:LedPos]
+    # ReArrangedData = Data[1][LedPos:16] + Data[1][0:LedPos]
 
     #i == 0 represnts Sensor blocked
-    for index, i in enumerate(ReArrangedData):
+    for index, i in enumerate(Data[1]):
         if Data[1][index - 1] == "0":
             #PolygonVerticies.append(Sensors[index][1:3])
             PolygonVerticies.append([Sensors[index][1] + 800,Sensors[index][2]])
@@ -155,6 +155,8 @@ while run:
 
 
 
+
+
     #PolygonVerticies.append(Sensors[0][1:3])
     # PolygonVerticies.append([Sensors[0][1] + 800,Sensors[0][2]])
     #PolygonVerticies.append(LEDS[LEDArrayIndex[int(Data[0],2)]][1:3])
@@ -164,6 +166,13 @@ while run:
 
     # This one might need to un comment later if 
     # silhouetteArrayBuffer[int(Data[0],2)] = (PolygonVerticies)
+
+
+    #left side polygon draw
+    leftSidePolygon = []
+    for verticies in PolygonVerticies:
+        leftSidePolygon.append((verticies[0]-800, verticies[1]))
+
 
 
     #Only append when there is a silhouette generated -> all points not equal  --> kinda works
@@ -206,14 +215,15 @@ while run:
 
     # THe issue here is the Polygons are not shaped not like a cone. 
     try:
-        a = shapely.Polygon(silhouetteArrayBuffer[4])
-        b = shapely.Polygon(silhouetteArrayBuffer[16])
-        intersectingPolygon = (shapely.intersection(a,b,1.0))
+        intersectingPolygon = shapely.Polygon(silhouetteArrayBuffer[0])
+        for ii in range(0,8,1):
+            a = shapely.Polygon(silhouetteArrayBuffer[ii])
+            intersectingPolygon = (shapely.intersection(intersectingPolygon,a,1.0))
 
-        pp.pprint(a)
-        pp.pprint(b)
-        print('intersection')
-        pp.pprint(intersectingPolygon)
+        # pp.pprint(a)
+        # pp.pprint(b)
+        # print('intersection')
+        # pp.pprint(intersectingPolygon)
 
         print('intersection2')
 
