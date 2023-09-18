@@ -40,9 +40,12 @@ ser = serial.Serial() # i guess init definition to remove the unbound issues
 # establishing connection based on operating system
 try:   
     if platform == "linux" or "linux2":
-        ser = serial.Serial('/dev/ttyACM1',115200) 
+        print("try open Linsx")
+        ser = serial.Serial('COM4',115200) 
+        #ser = serial.Serial('/dev/ttyACM1',115200) 
     elif platform == "win32": 
-        ser = serial.Serial('COM3',115200) 
+        print("try open com4")
+        ser = serial.Serial('COM4',115200) 
     else:
         print("tf operating system?")
     connected = True
@@ -79,6 +82,8 @@ led = [200,250]
 sensorStates = [True,False,False,False]
 
 LEDS = calculatePositioning(numberLEDs,radius,screenHeight/2,screenWidth/4)
+# -> in a tuple [index, (x,y)]
+
 SensorsReversed = calculatePositioning(numberSensors,radius,screenHeight/2,screenWidth/4, offset=SensorOffset)
 Sensors = SensorsReversed[::-1]
 
@@ -101,7 +106,7 @@ while run:
     for sensor in Sensors:
         pygame.draw.circle(screen, sensorColor, (sensor[1],sensor[2]),sensorSize)
 
-    ##Reads w/e number and corresponding Data
+    ##Reads w/e number and corresponding Data ==> each read ==> led Iteration. Per LED iteration = 16 sensor readings
     microChars = ser.readline().decode()
 
     binLED = bin(ord(microChars[0]))
@@ -123,32 +128,53 @@ while run:
 
     #i = ->  integer value represeting the status of the sensor
 
+    holderList = []
+    for i in range(0,16,1):
+        holderList.append(i)
+
+    #holder list representing index
+
     PolygonVerticies = []
     #PolygonVerticies.append(LEDS[LEDArrayIndex[int(Data[0],2)]][1:3])
-    PolygonVerticies.append([LEDS[LEDArrayIndex[int(Data[0],2)]][1] + 800,LEDS[LEDArrayIndex[int(Data[0],2)]][2]])
+    #PolygonVerticies.append([LEDS[LEDArrayIndex[int(Data[0],2)]][1] + 800,LEDS[LEDArrayIndex[int(Data[0],2)]][2]]) # push First LED index 
 
-    LedPos = int((int(Data[0],2))/2)
+    #Split the LED pos to get relative number position of the sensors
+    LedPos = int((int(Data[0],2))/2)+1
 
-    # ReArrangedData = Data[1][LedPos:16] + Data[1][0:LedPos]
+
+    sensorsRelativeToLED = Data[1][LedPos:16] + Data[1][0:LedPos]
+    newIndex = holderList[LedPos:16]+holderList[0:LedPos]
+
+    print(sensorsRelativeToLED)
 
     #i == 0 represnts Sensor blocked
-    for index, i in enumerate(Data[1]):
-        if Data[1][index - 1] == "0":
-            #PolygonVerticies.append(Sensors[index][1:3])
-            PolygonVerticies.append([Sensors[index][1] + 800,Sensors[index][2]])
-            continue
-
-        if i == "1":
+    #index and I needs to be reordered in teh 
+    #for index, i in enumerate(Data[1]):
+    for i in range(0,16,1): # per sensor reading through
+        #Check -> outter are switched therefore make the 
+        try:
+            if sensorsRelativeToLED[i - 1] == "0":
+                #PolygonVerticies.append(Sensors[index][1:3])
+                PolygonVerticies.append([Sensors[newIndex[i]][1] + 800,Sensors[newIndex[i]][2]])
+                continue
+            if sensorsRelativeToLED[i + 1] == "0":
+                #PolygonVerticies.append(Sensors[index][1:3])
+                PolygonVerticies.append([Sensors[newIndex[i]][1] + 800,Sensors[newIndex[i]][2]])
+                continue
+            #If Left side make full tbd
+        except:
+            pass
+        if sensorsRelativeToLED[i] == "1":
             #PolygonVerticies.append(LEDS[LEDArrayIndex[int(Data[0],2)]][1:3])
             PolygonVerticies.append([LEDS[LEDArrayIndex[int(Data[0],2)]][1] + 800,LEDS[LEDArrayIndex[int(Data[0],2)]][2]])
             #??? what is 1:3 --> LEDs is a tuple --> [0] = number, [1]=xpos [2]=ypos
-            pygame.draw.circle(screen,"green",Sensors[index][1:3], 10,51)
-            pygame.draw.line(screen,"black", LEDS[LEDArrayIndex[int(Data[0],2)]][1:3], Sensors[index][1:3])
+            pygame.draw.circle(screen,"green",Sensors[newIndex[i]][1:3], 10,51)
+            pygame.draw.line(screen,"black", LEDS[LEDArrayIndex[int(Data[0],2)]][1:3], Sensors[newIndex[i]][1:3])
         else:
             #PolygonVerticies.append(Sensors[index][1:3])
-            PolygonVerticies.append([Sensors[index][1] + 800,Sensors[index][2]])
+            PolygonVerticies.append([Sensors[newIndex[i]][1] + 800,Sensors[newIndex[i]][2]])
         #     pygame.draw.line(screen,"red", LEDS[LEDArrayIndex[int(Data[0],2)]][1:3], Sensors[index][1:3])
-        print(str(index) + ":" + str(i))
+        print(str(i) + ":" + str(i))
 
     #Half the iterations based on the sensor position and add 
 
@@ -160,7 +186,7 @@ while run:
     #PolygonVerticies.append(Sensors[0][1:3])
     # PolygonVerticies.append([Sensors[0][1] + 800,Sensors[0][2]])
     #PolygonVerticies.append(LEDS[LEDArrayIndex[int(Data[0],2)]][1:3])
-    PolygonVerticies.append([LEDS[LEDArrayIndex[int(Data[0],2)]][1] + 800,LEDS[LEDArrayIndex[int(Data[0],2)]][2]])
+    #PolygonVerticies.append([LEDS[LEDArrayIndex[int(Data[0],2)]][1] + 800,LEDS[LEDArrayIndex[int(Data[0],2)]][2]])
 
     # pp.pprint(PolygonVerticies)
 
@@ -216,7 +242,7 @@ while run:
     # THe issue here is the Polygons are not shaped not like a cone. 
     try:
         intersectingPolygon = shapely.Polygon(silhouetteArrayBuffer[0])
-        for ii in range(0,8,1):
+        for ii in range(0,16,1):
             a = shapely.Polygon(silhouetteArrayBuffer[ii])
             intersectingPolygon = (shapely.intersection(intersectingPolygon,a,1.0))
 
@@ -234,8 +260,10 @@ while run:
 
         for i in range(0,len(preCrossSection[0])):
             finalCrossSection.append(preCrossSection[0][i])
-            
-        pygame.draw.polygon(screen,"green", finalCrossSection)
+
+        pygame.draw.polygon(screen,"green", leftSidePolygon)
+
+        #pygame.draw.polygon(screen,"green", finalCrossSection)
     except:
         print("null")
 
