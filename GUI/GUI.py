@@ -73,6 +73,8 @@ screen = pygame.display.set_mode((screenWidth,screenHeight))
 #Quit condition
 run = True
 
+font = pygame.font.SysFont("Minecraft.ttf",50)
+
 #Graphical positions of sensors
 
 # sensors = [[400,350], [450,300], [450,200],[400,150]]
@@ -156,10 +158,12 @@ while run:
             if sensorsRelativeToLED[i - 1] == "0":
                 #PolygonVerticies.append(Sensors[index][1:3])
                 PolygonVerticies.append([Sensors[newIndex[i]][1] + 800,Sensors[newIndex[i]][2]])
+                pygame.draw.circle(screen,"pink",Sensors[newIndex[i]][1:3], 10,31)
                 continue
             if sensorsRelativeToLED[i + 1] == "0":
                 #PolygonVerticies.append(Sensors[index][1:3])
                 PolygonVerticies.append([Sensors[newIndex[i]][1] + 800,Sensors[newIndex[i]][2]])
+                pygame.draw.circle(screen,"pink",Sensors[newIndex[i]][1:3], 10,31)                
                 continue
             #If Left side make full tbd
         except:
@@ -174,7 +178,6 @@ while run:
             #PolygonVerticies.append(Sensors[index][1:3])
             PolygonVerticies.append([Sensors[newIndex[i]][1] + 800,Sensors[newIndex[i]][2]])
         #     pygame.draw.line(screen,"red", LEDS[LEDArrayIndex[int(Data[0],2)]][1:3], Sensors[index][1:3])
-        print(str(i) + ":" + str(i))
 
     #Half the iterations based on the sensor position and add 
 
@@ -228,6 +231,8 @@ while run:
     #rolling buffer of silhouettes  FILO
     if len(silhouetteArrayBuffer) > 32:
         silhouetteArrayBuffer.pop(0)
+
+    pygame.draw.polygon(screen,"green", leftSidePolygon)
     # pp.pprint(silhouetteArrayBuffer)
 
         # intersectingPolygon = (shapely.intersection(a,b,1))
@@ -242,7 +247,7 @@ while run:
     # THe issue here is the Polygons are not shaped not like a cone. 
     try:
         intersectingPolygon = shapely.Polygon(silhouetteArrayBuffer[0])
-        for ii in range(0,16,1):
+        for ii in range(0,32,1):
             a = shapely.Polygon(silhouetteArrayBuffer[ii])
             intersectingPolygon = (shapely.intersection(intersectingPolygon,a,1.0))
 
@@ -251,19 +256,22 @@ while run:
         # print('intersection')
         # pp.pprint(intersectingPolygon)
 
-        print('intersection2')
-
         finalCrossSection = []
         preCrossSection = (mapping(intersectingPolygon)["coordinates"])
 
-        pp.pprint(preCrossSection)
+        #pp.pprint(preCrossSection)
 
         for i in range(0,len(preCrossSection[0])):
             finalCrossSection.append(preCrossSection[0][i])
 
-        pygame.draw.polygon(screen,"green", leftSidePolygon)
 
-        #pygame.draw.polygon(screen,"green", finalCrossSection)
+
+        pygame.draw.polygon(screen,"green", finalCrossSection)
+        #print("area = :" + str(intersectingPolygon.area))
+        areaText = font.render("area =" + str(round(intersectingPolygon.area/520,2)) + "cm^2", True, (0, 0, 0))
+        rect = areaText.get_size()
+        screen.blit(areaText,(1200,600))
+        # pygame.draw.circle(screen,"black",(1200,400),400,2)
     except:
         print("null")
 
